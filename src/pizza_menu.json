@@ -1,0 +1,17 @@
+{
+    "sizes": ["Small", "Medium", "Large"],
+    "toppings": ["Pepperoni", "Veggie", "Cheese Burst", "Spicy Paneer"],
+    "specials": {
+      "Veggie Delight": {
+        "size": "Medium",
+        "topping": "Veggie",
+        "price": 9.99
+      },
+      "Fiery Cheese": {
+        "size": "Large",
+        "topping": "Cheese Burst",
+        "price": 12.49
+      }
+    }
+  }
+  
