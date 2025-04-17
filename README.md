@@ -7,19 +7,37 @@ Powered by **Flask**, enhanced with **LLMs**, integrated with **Stripe**, and de
 
 ---
 
-## ⚙️ Structure 
+## ⚙️ Project Structure
 
 ```
 .
-├── app_web.py         # Web-based chatbot UI using Flask
-├── chatbot.html       # Web chat UI
-├── chatbot.js         # Client-side interaction logic
-├── utils.py           # Order saving / data helpers
-├── pizza_menu.json    # Editable menu (supports categories & aliases)
-├── orders.json        # File-based order logs
-├── requirements.txt   # Project dependencies
-├── style.css          # Custom web UI styling
-├── README.md          # You're reading it
+├── app/                # Python package with application code & data
+│   ├── app.py          # Flask entrypoint (routes & respond logic)
+│   ├── wsgi.py         # WSGI app for production servers
+│   ├── config.py       # Environment loading, constants, API keys
+│   ├── state_handler.py# Session state getters/setters
+│   ├── menu_helpers.py # Menu formatting & best-match lookup
+│   ├── cart_logic.py   # Cart summary & confirmation logic
+│   ├── ai_intent.py    # Intent parsing (LLM + rule-based fallback)
+│   ├── rule_kb.py      # Rule-based classifier using italian_kb.json
+│   ├── openai_funcs.py # OpenAI function-calling integration
+│   ├── ai_rag.py       # Retrieval-augmented generation fallback
+│   ├── kb.py           # Knowledge-base loader & vector search helper
+│   ├── utils.py        # Order & chat logging helpers
+│   ├── pizza_menu.json # JSON menu data
+│   └── italian_kb.json # Rule KB: utterances, templates, categories
+├── templates/          # Jinja2 HTML templates
+│   └── chat.html       # Chat UI
+├── static/             # Static assets (CSS, JS)
+│   ├── style.css
+│   └── chatbot.js
+├── logs/               # Persisted logs
+│   ├── orders.log      # Order events log
+│   └── chat.log        # Conversation log
+├── Procfile            # Render/Heroku startup command
+├── requirements.txt    # Python dependencies
+├── README.md           # Project documentation
+└── LICENSE             # License file
 ```
 
 ---
@@ -27,14 +45,39 @@ Powered by **Flask**, enhanced with **LLMs**, integrated with **Stripe**, and de
 ## 🚀 Local Setup
 
 ```bash
-git clone https://github.com/Agentibus-ai/HungerGod
-cd HungerGod/src
-pip install -r ../requirements.txt
-python app_web.py
+# Clone the repository and navigate to the project root
+git clone https://github.com/Agentibus-ai/HungerGod.git
+cd HungerGod
+
+# (Optional) Create a .env file with your secrets:
+cat > .env <<EOF
+SECRET_KEY=your-secret-key
+OPENAI_API_KEY=your-openai-key
+STRIPE_SECRET_KEY=your-stripe-secret
+STRIPE_WEBHOOK_SECRET=your-webhook-secret
+EOF
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run in development mode
+export FLASK_ENV=development
+python -m app.app
 ```
 
 ## ☁️ Production Deployment: [Render](https://hungergod.onrender.com/) 
-
+1. In Render, create a new Web Service and point it to this repository.
+2. Ensure *Root Directory* is **empty** (use the repo root), not `app/`.
+3. Set *Build Command* to:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Leave *Start Command* blank so that Render uses the `Procfile` in the root.
+5. Your `Procfile` defines:
+   ```
+   web: gunicorn app.app:app --bind 0.0.0.0:$PORT
+   ```
+6. (Optional) Configure environment variables in your Render dashboard to match your `.env`.
 
 ## 🧠 Features
 - ✅ Web-based UI (chat + menu + cart)
@@ -43,16 +86,6 @@ python app_web.py
 - 💳 Stripe integration with webhook
 - 🔁 Smart session memory for cart state
 - 🪄 Suggestive upsell logic (e.g., drinks with pizza)
-
----
-
-## 📌 Next Up
-- Add persistent DB (MongoDB, Firebase, PostgreSQL)
-- Admin dashboard for order management
-- WhatsApp Business API integration
-- Razorpay / PayPal payment support
-- Multilingual / voice ordering (Whisper)
-- Real-time order tracking
 
 ---
 
