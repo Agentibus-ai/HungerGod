@@ -1,17 +1,24 @@
 {
-    "sizes": ["Small", "Medium", "Large"],
-    "toppings": ["Pepperoni", "Veggie", "Cheese Burst", "Spicy Paneer"],
-    "specials": {
-      "Veggie Delight": {
-        "size": "Medium",
-        "topping": "Veggie",
-        "price": 9.99
-      },
-      "Fiery Cheese": {
-        "size": "Large",
-        "topping": "Cheese Burst",
-        "price": 12.49
-      }
-    }
-  }
-  
+  "Pizze": [
+    {"name": "Margherita", "price": 6, "aliases": ["margerita", "margharita"]},
+    {"name": "Quattro Stagioni", "price": 8, "aliases": ["4 stagioni", "quatro stagioni"]},
+    {"name": "Diavola", "price": 7.5, "aliases": ["diavolla", "devil"]},
+    {"name": "Bufalina", "price": 9, "aliases": ["buffalina", "bufalla"]},
+    {"name": "Capricciosa", "price": 8.5, "aliases": ["capricosa", "cappriciosa"]},
+    {"name": "Vegetariana", "price": 7, "aliases": ["veg", "vegetale"]},
+    {"name": "Napoli", "price": 6.5, "aliases": ["napolitana", "neapolitan"]},
+    {"name": "Tonno e Cipolla", "price": 7.5, "aliases": ["tonno cipolla", "tonno"]},
+    {"name": "Frutti di Mare", "price": 9, "aliases": ["mare", "seafood"]},
+    {"name": "Prosciutto e Funghi", "price": 8, "aliases": ["prosciutto funghi", "ham mushrooms"]}
+  ],
+  "Bevande": [
+    {"name": "Acqua Naturale", "price": 1.5, "aliases": ["acqua", "water"]},
+    {"name": "Coca-Cola", "price": 2, "aliases": ["coke", "coca", "coca cola", "cocacola"]},
+    {"name": "Birra artigianale", "price": 4.5, "aliases": ["birra", "beer"]},
+    {"name": "Vino Rosso", "price": 5, "aliases": ["vino", "vino rosso", "red wine"]}
+  ],
+  "Dolci": [
+    {"name": "Tiramisù", "price": 4, "aliases": ["tiramisou", "tiramisu"]},
+    {"name": "Cannolo Siciliano", "price": 3.5, "aliases": ["cannolo", "cannoli"]}
+  ]
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizzeria Da Mario - Assistente Virtuale</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="welcome-animation">
+        <div class="logo-animation">Pizzeria Da Mario</div>
+        <i class="fas fa-pizza-slice pizza-icon"></i>
+    </div>
+
+    <header class="header">
+        <h1><i class="fas fa-pizza-slice"></i> Pizzeria Da Mario</h1>
+    </header>
+
+    <div class="chat-container">
+        <div class="chat-box" id="chatBox"></div>
+        <div class="quick-order-container">
+            <button class="order-button" id="menuButton">Mostra Menu</button>
+            <button class="order-button" id="checkoutButton">Checkout</button>
+        </div>
+        <div class="cart-button empty" id="cartButton">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count" id="cartCount">0</span>
+        </div>
+        <div class="cart-summary" id="cartSummary">
+            <div class="cart-header">
+                <h3 id="cartHeaderTitle">Il tuo Carrello</h3>
+                <span class="cart-close" id="cartClose"><i class="fas fa-times"></i></span>
+            </div>
+            <div class="cart-items" id="cartItems"></div>
+            <div class="cart-total">
+                <span id="cartTotalLabel">Totale:</span>
+                <span id="cartTotal">€0.00</span>
+            </div>
+        </div>
+        <div class="input-area">
+            <input type="text" class="message-input" id="messageInput" placeholder="Scrivi il tuo messaggio...">
+            <button class="send-button" id="sendButton">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.2/marked.min.js"></script>
+    <script src="/static/chatbot.js"></script>
+</body>
+</html>

@@ -87,3 +87,7 @@ Use it to configure your WhatsApp webhook when you're ready.
 ---
 
 *"Gods need temples. HungerGod needs servers."*
+
+VERIFY_TOKEN = "pizza_time"
+ACCESS_TOKEN = "EAAY6BPrIuUsBOZB78CZBH3ySPkaPSf43bCVNGkNTSPzqqgzmHmUWfPy3wWcEhvkBv4wbpL7DGVjQvad2bRQzcFZCkD9EE1wZCU3f4s3ANQPW5CQ8QOjQNdwiwHWRZA75wsgdTWHmJgrw181BZA1cx96GjEz2hDf9vGtc4iti89tgt3KvKMM6NRqXa79CsoVAIw13xXhVZALhWc20MrFVMlu4H4KMeyZCuEBXsGX7az8FiTsZD"
+PHONE_NUMBER_ID = "601417616388779"
