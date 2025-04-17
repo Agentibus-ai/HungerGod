@@ -4,6 +4,7 @@ import os
 import stripe
 
 from config import SECRET_KEY, PIZZERIA, INFO, STRIPE_WEBHOOK_SECRET
+from rule_kb import responses_template
 from state_handler import get_state, set_state
 from menu_helpers import format_menu, best_match
 from ai_intent import understand
@@ -98,28 +99,40 @@ def respond(text):
     for intent, data in intent_bucket.items():
         if intent in ["add_to_cart", "remove"]:
             continue
-        # Show menu on 'menu' or 'order' intent
-        if intent in ["menu", "order"]:
+        # Show menu on 'menu' intent
+        if intent == "menu":
+            header = responses_template.get('menu', '📋 Ecco il nostro menu completo!')
+            responses.append(f"{header}\n\n" + format_menu())
+        # Acknowledge order intent and show menu
+        elif intent == "order":
+            # Conversational acknowledgement
+            ack = responses_template.get(
+                'order_start',
+                "Ho capito, desideri fare un ordine. Ecco il nostro menu:"
+            )
+            responses.append(ack)
             responses.append(format_menu())
         elif intent in ["greet", "info"]:
-            responses.append(
-                f"📍 {INFO['address']}\n🕒 {INFO['hours']}\n📞 {INFO['phone']}\n"
-                "Vuoi vedere il nostro menu o iniziare un ordine?"
-            )
+            if intent == 'greet':
+                responses.append(responses_template.get('greet', f"👋 Ciao! Benvenuto in {PIZZERIA}!"))
+            else:
+                responses.append(responses_template.get('info', f"📍 {INFO['address']}\n🕒 {INFO['hours']}\n📞 {INFO['phone']}"))
         elif intent == "track":
             lo = state.get("last_order")
             if lo:
-                responses.append(f"Il tuo ordine {lo['number']} sarà pronto alle {lo['eta']}!")
+                eta = lo.get('eta', '')
+                tpl = responses_template.get('track', 'Il tuo ordine sarà pronto per il ritiro alle {eta}.')
+                responses.append(tpl.format(eta=eta))
             else:
-                responses.append("Nessun ordine trovato. Vuoi ordinarne uno?")
+                responses.append(responses_template.get('fallback', 'Nessun ordine trovato. Vuoi ordinarne uno?'))
         elif intent == "staff":
-            responses.append("Ti metto in contatto con lo staff... scherzo! Sono ancora io. Dimmi pure.")
+            responses.append(responses_template.get('other', 'Ti metto in contatto con lo staff... scherzo! Sono ancora io. Dimmi pure.'))
         elif intent == "checkout":
             responses.append(do_checkout(state))
             set_state(state)
         elif intent == "other":
-            # Retrieval-augmented response for unrecognized intent
-            responses.append(rag_response(text, state))
+            # Fallback for miscellaneous queries
+            responses.append(responses_template.get('fallback', rag_response(text, state)))
     # If still no response, use RAG fallback
     if not responses:
         responses.append(rag_response(text, state))

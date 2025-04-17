@@ -3,11 +3,16 @@ import re
 import openai
 from cart_logic import cart_summary
 from config import PIZZERIA
+from rule_kb import classify as rule_classify
 
 def understand(text, state):
     """
     Use an LLM to parse user text into structured intents and items.
     """
+    # First, try rule-based classification from KB
+    rule_res = rule_classify(text)
+    if rule_res:
+        return rule_res
     # Keep a rolling window of the last 6 messages (user and bot)
     recent_msgs = state.get("history", [])[-6:]
     chat_history = []

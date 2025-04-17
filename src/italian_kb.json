@@ -1,0 +1,275 @@
+[
+  {
+    "intent": "greet",
+    "utterance": "Ciao"
+  },
+  {
+    "intent": "greet",
+    "utterance": "Buongiorno"
+  },
+  {
+    "intent": "greet",
+    "utterance": "Salve"
+  },
+  {
+    "intent": "greet",
+    "utterance": "Buonasera"
+  },
+  {
+    "intent": "greet",
+    "utterance": "Hey"
+  },
+  {
+    "intent": "greet",
+    "utterance": "Ehilà"
+  },
+  {
+    "intent": "greet",
+    "utterance": "Ciao Mario"
+  },
+  {
+    "intent": "greet",
+    "utterance": "Ciao Pizzeria"
+  },
+  {
+    "intent": "greet",
+    "utterance": "Ciao, siete aperti?"
+  },
+  {
+    "intent": "menu",
+    "utterance": "Posso vedere il menu?"
+  },
+  {
+    "intent": "menu",
+    "utterance": "Quali pizze avete?"
+  },
+  {
+    "intent": "menu",
+    "utterance": "Cosa c'è nel menu?"
+  },
+  {
+    "intent": "menu",
+    "utterance": "Mostrami il menu"
+  },
+  {
+    "intent": "menu",
+    "utterance": "Hai una lista delle pizze?"
+  },
+  {
+    "intent": "menu",
+    "utterance": "Fammi vedere le bevande"
+  },
+  {
+    "intent": "menu",
+    "utterance": "Avete dolci?"
+  },
+  {
+    "intent": "menu",
+    "utterance": "Che tipi di pizza avete?"
+  },
+  {
+    "intent": "order",
+    "utterance": "Vorrei una Margherita"
+  },
+  {
+    "intent": "order",
+    "utterance": "Prendo una Diavola"
+  },
+  {
+    "intent": "order",
+    "utterance": "Mi dai una Quattro Stagioni"
+  },
+  {
+    "intent": "order",
+    "utterance": "Una Bufalina e una Coca-Cola, grazie"
+  },
+  {
+    "intent": "order",
+    "utterance": "Vorrei ordinare una pizza"
+  },
+  {
+    "intent": "order",
+    "utterance": "Fammi una Napoli"
+  },
+  {
+    "intent": "order",
+    "utterance": "Mi porti una Vegetariana"
+  },
+  {
+    "intent": "order",
+    "utterance": "Prendo una pizza e una birra"
+  },
+  {
+    "intent": "add_to_cart",
+    "utterance": "Aggiungi una Coca-Cola"
+  },
+  {
+    "intent": "add_to_cart",
+    "utterance": "Metti anche una Tiramisù"
+  },
+  {
+    "intent": "add_to_cart",
+    "utterance": "Aggiungi un'altra Margherita"
+  },
+  {
+    "intent": "add_to_cart",
+    "utterance": "Vorrei aggiungere una Capricciosa"
+  },
+  {
+    "intent": "add_to_cart",
+    "utterance": "Anche una birra, per favore"
+  },
+  {
+    "intent": "remove",
+    "utterance": "Togli la Diavola"
+  },
+  {
+    "intent": "remove",
+    "utterance": "Rimuovi la Coca-Cola"
+  },
+  {
+    "intent": "remove",
+    "utterance": "Cancella la Margherita"
+  },
+  {
+    "intent": "remove",
+    "utterance": "Non voglio più la birra"
+  },
+  {
+    "intent": "remove",
+    "utterance": "Elimina la Bufalina"
+  },
+  {
+    "intent": "checkout",
+    "utterance": "Voglio pagare"
+  },
+  {
+    "intent": "checkout",
+    "utterance": "Procediamo al pagamento"
+  },
+  {
+    "intent": "checkout",
+    "utterance": "Checkout"
+  },
+  {
+    "intent": "checkout",
+    "utterance": "Sono pronto per pagare"
+  },
+  {
+    "intent": "checkout",
+    "utterance": "Quanto costa?"
+  },
+  {
+    "intent": "checkout",
+    "utterance": "Fammi il conto"
+  },
+  {
+    "intent": "checkout",
+    "utterance": "Pago ora"
+  },
+  {
+    "intent": "track",
+    "utterance": "Dov'è il mio ordine?"
+  },
+  {
+    "intent": "track",
+    "utterance": "Quanto manca?"
+  },
+  {
+    "intent": "track",
+    "utterance": "È pronto?"
+  },
+  {
+    "intent": "track",
+    "utterance": "A che punto è la mia pizza?"
+  },
+  {
+    "intent": "track",
+    "utterance": "Sto aspettando il mio ordine"
+  },
+  {
+    "intent": "info",
+    "utterance": "Dove siete?"
+  },
+  {
+    "intent": "info",
+    "utterance": "Che orari fate?"
+  },
+  {
+    "intent": "info",
+    "utterance": "Siete aperti?"
+  },
+  {
+    "intent": "info",
+    "utterance": "Avete un numero di telefono?"
+  },
+  {
+    "intent": "info",
+    "utterance": "Come posso contattarvi?"
+  },
+  {
+    "intent": "staff",
+    "utterance": "Posso parlare con qualcuno?"
+  },
+  {
+    "intent": "staff",
+    "utterance": "Voglio parlare con un umano"
+  },
+  {
+    "intent": "staff",
+    "utterance": "C'è un cameriere?"
+  },
+  {
+    "intent": "staff",
+    "utterance": "Hai un collega umano?"
+  },
+  {
+    "intent": "other",
+    "utterance": "Mi racconti una barzelletta?"
+  },
+  {
+    "intent": "other",
+    "utterance": "Cosa pensi della pizza con l’ananas?"
+  },
+  {
+    "intent": "other",
+    "utterance": "Hai fame anche tu?"
+  },
+  {
+    "intent": "other",
+    "utterance": "Ti piacciono le pizze?"
+  },
+  {
+    "intent": "other",
+    "utterance": "Sei un robot?"
+  },
+  {
+    "categories": {
+      "pizze": ["pizza", "pizze", "margherita", "diavola", "quattro stagioni", "capricciosa", "bufalina", "vegetariana", "napoli", "tonno e cipolla", "prosciutto e funghi", "frutti di mare"],
+      "bevande": ["bevanda", "bevande", "bibita", "bibite", "acqua naturale", "acqua frizzante", "coca-cola", "sprite", "birra", "vino rosso", "vino bianco"],
+      "dolci": ["dolce", "dolci", "dessert", "tiramisù", "cannolo siciliano", "panna cotta", "gelato", "semifreddo"]
+    },
+    "actions": {
+      "greet": ["ciao", "buongiorno", "buonasera", "salve"],
+      "menu": ["cosa c'è nel menu", "fammi vedere il menu", "hai un menu", "vedere la lista", "mostrami cosa posso ordinare", "menu per favore"],
+      "order": ["vorrei", "prendo", "mi dai", "posso avere", "voglio", "metti nel carrello", "aggiungi", "ordino", "una", "un", "una pizza", "una coca", "due tiramisù"],
+      "remove": ["togli", "rimuovi", "cancella", "non voglio più", "elimini", "scarta", "non lo prendo"],
+      "checkout": ["voglio pagare", "checkout", "procedi al pagamento", "paga ora", "sono pronto a pagare", "concludi l'ordine", "fatto"],
+      "info": ["dove siete", "indirizzo", "contatto", "numero di telefono", "orari", "quando aprite", "siete aperti", "chiusura", "come funziona", "descrizione"],
+      "track": ["dove è il mio ordine", "a che punto è", "quando sarà pronto", "stato dell’ordine", "consegna"],
+      "other": ["non capisco", "parla più lentamente", "aiuto", "supporto"]
+    },
+    "quantifiers": ["una", "un", "due", "tre", "quattro", "cinque", "sei"],
+    "responses_template": {
+      "greet": "👋 Ciao! Benvenuto da Pizzeria Da Mario!",
+      "menu": "📋 Ecco il nostro menu completo!",
+      "order_confirmation": "✅ Ho aggiunto {items} al tuo carrello.",
+      "remove_confirmation": "🗑️ Ho rimosso {items} dal tuo carrello.",
+      "checkout": "💳 Procediamo al pagamento. Il totale è di {total}€.",
+      "info": "📍 Ci troviamo in Via Roma 123, Milano. Siamo aperti dalle 11:00 alle 23:00.",
+      "track": "Il tuo ordine sarà pronto per il ritiro alle {eta}.",
+      "fallback": "Non ho capito bene. Vuoi vedere il menu, fare un ordine, o hai bisogno d'aiuto?"
+    }
+  }
+  
+]
