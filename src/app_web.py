@@ -242,12 +242,20 @@ def respond(text):
     # Fallback: if no intent parsed, try to infer based on vague responses
     if not parsed_intents:
         text_lower = text.strip().lower()
-        if text_lower in ["yes", "sure", "go", "vai", "okay", "ok", "checkout", "ordine", "order", "procedi"]:
-            return do_checkout(state)
-        elif text_lower in ["menu", "show menu"]:
+        affirmatives = {"yes", "sure", "go", "vai", "ok", "okay", "checkout", "ordine", "order", "procedi", "confirm", "checkout now", "do it", "sì", "si", "va bene", "d'accordo"}
+
+        if text_lower in affirmatives:
+            # If last step was suggestive upsell or cart update
+            if state["cart"] and state["step"] != "ordered":
+                return do_checkout(state)
+            else:
+                return "Vuoi vedere il menu o iniziare un ordine?"
+
+        elif text_lower in {"menu", "show menu", "mostra menu"}:
             return format_menu()
-        else:
-            return "Non ho capito bene. Vuoi vedere il menu o ordinare qualcosa?"
+
+        return "Non ho capito bene. Vuoi vedere il menu o ordinare qualcosa?"
+
 
     from collections import defaultdict
     intent_bucket = defaultdict(list)
