@@ -254,7 +254,7 @@
       "menu": ["cosa c'è nel menu", "fammi vedere il menu", "hai un menu", "vedere la lista", "mostrami cosa posso ordinare", "menu per favore"],
       "order": ["vorrei", "prendo", "mi dai", "posso avere", "voglio", "metti nel carrello", "aggiungi", "ordino", "una", "un", "una pizza", "una coca", "due tiramisù"],
       "remove": ["togli", "rimuovi", "cancella", "non voglio più", "elimini", "scarta", "non lo prendo"],
-      "checkout": ["voglio pagare", "checkout", "procedi al pagamento", "paga ora", "sono pronto a pagare", "concludi l'ordine", "fatto"],
+      "checkout": ["voglio pagare", "checkout", "procedi al pagamento", "passiamo al checkout", "passiamo al pagamento", "paga ora", "sono pronto a pagare", "concludi l'ordine", "fatto"],
       "info": ["dove siete", "indirizzo", "contatto", "numero di telefono", "orari", "quando aprite", "siete aperti", "chiusura", "come funziona", "descrizione"],
       "track": ["dove è il mio ordine", "a che punto è", "quando sarà pronto", "stato dell’ordine", "consegna"],
       "other": ["non capisco", "parla più lentamente", "aiuto", "supporto"]
