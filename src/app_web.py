@@ -339,5 +339,9 @@ def stripe_webhook():
         return "Error", 400
     return "OK", 200
 
+@app.route("/health")
+def health():
+    return "OK", 200
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
