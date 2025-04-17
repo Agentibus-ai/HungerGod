@@ -43,17 +43,33 @@ def respond(text):
         return f"Piacere di conoscerti, {name}! Preferisci consegna a domicilio o ritiro al locale?"
     if step == 'await_delivery_method':
         choice = text.lower()
-        if 'domicilio' in choice or 'consegna' in choice:
+        # Home delivery (Italian and English)
+        if 'domicilio' in choice or 'consegna' in choice or 'delivery' in choice:
             state['pending_order']['delivery'] = 'domicilio'
             state['step'] = 'await_address'
             set_state(state)
             return "Perfetto, per favore indicami l'indirizzo di consegna."
-        state['pending_order']['delivery'] = 'ritiro'
-        state['step'] = 'await_payment_method'
-        set_state(state)
-        return "Va benissimo, come preferisci pagare? Online o direttamente in pizzeria?"
+        # Local pickup (Italian and English)
+        if 'ritiro' in choice or 'pickup' in choice:
+            state['pending_order']['delivery'] = 'ritiro'
+            state['step'] = 'await_payment_method'
+            set_state(state)
+            return "Va benissimo, come preferisci pagare? Online o direttamente in pizzeria?"
+        # Ambiguous response
+        return "Non ho capito, preferisci consegna a domicilio o ritiro al locale?"
     if step == 'await_address':
         address = text.strip()
+        # Only deliver within Milan
+        if 'milano' not in address.lower():
+            # Reset delivery choice and ask again
+            state['pending_order'].pop('delivery', None)
+            state['step'] = 'await_delivery_method'
+            set_state(state)
+            return (
+                "Mi dispiace, purtroppo consegniamo solo nella città di Milano. "
+                "Preferisci ritiro al locale o indicare un altro indirizzo a Milano?"
+            )
+        # Valid Milan address
         state['pending_order']['address'] = address
         state['step'] = 'await_payment_method'
         set_state(state)
@@ -104,6 +120,39 @@ __Confermi l'ordine?___ (sì / no)"""
         state["step"] = "ordering"
         set_state(state)
         return f"👋 Benvenuto in *{PIZZERIA}*! Vuoi vedere il menu o ordinare subito? La Diavola oggi è 🔥"
+
+    # Intercept pending upsell suggestions before intent parsing
+    if state.get('step') == 'ordering' and state.get('pending_suggestion'):
+        suggestion_name = state['pending_suggestion']
+        text_low = text.strip().lower()
+        yes_values = ['sì', 'si', 'yes', 'ok', 'va bene', 'certo']
+        no_values = ['no', 'no grazie', 'non grazie']
+        # Accept suggestion
+        if text_low in yes_values:
+            match = best_match(suggestion_name)
+            if match:
+                state['cart'].append(match)
+                items_added = [(match['name'], 1)]
+                # clear previous suggestion
+                state.pop('pending_suggestion', None)
+                # generate confirmation with possible next suggestion
+                reply = confirm_order(state, items_added)
+                set_state(state)
+                return reply
+        # Proceed to checkout
+        if 'checkout' in text_low:
+            state.pop('pending_suggestion', None)
+            state['step'] = 'await_name'
+            set_state(state)
+            return "Perfetto, proseguiamo con l'ordine! Prima di tutto, come ti chiami?"
+        # Decline suggestion
+        if text_low in no_values:
+            state.pop('pending_suggestion', None)
+            set_state(state)
+            return "Ok, vuoi aggiungere qualcos'altro? Altrimenti scrivi 'checkout' per procedere al pagamento."
+        # Unrelated response: clear suggestion and continue normal flow
+        state.pop('pending_suggestion', None)
+        set_state(state)
 
     parsed_intents = understand(text, state)
 

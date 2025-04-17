@@ -51,14 +51,21 @@ def confirm_order(user_state, items_added=None):
     if ("bevande" in categories_in_cart or "pizze" in categories_in_cart) and "dolci" not in categories_in_cart:
         missing_cats.append("Dolci")
 
+    # Determine and track suggestion
+    suggestion = None
     if missing_cats:
         cat = random.choice(missing_cats)
         if cat in menu and menu[cat]:
             suggestion = random.choice(menu[cat])
+            # Track pending suggestion in state
+            user_state['pending_suggestion'] = suggestion['name']
             message.append(
                 f"\n✨ *Aggiungiamo un* _{suggestion['name']}_ *per €{suggestion['price']:.2f}?* "
                 f"È perfetto con la tua pizza!"
             )
+    # Clear any previous suggestion if no new suggestion offered
+    if suggestion is None and 'pending_suggestion' in user_state:
+        user_state.pop('pending_suggestion', None)
 
     message.append("\nVuoi aggiungere altro o passiamo al checkout?")
     return "\n\n".join(message)
