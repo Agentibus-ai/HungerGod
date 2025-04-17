@@ -1,15 +1,29 @@
+#!/usr/bin/env python3
+"""
+Entrypoint for running the Flask app.
+Supports both module and script execution.
+"""
+import os, sys
+if __name__ == '__main__' and __package__ is None:
+    # when run as script, add project root to path and set package context
+    pkg_root = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(pkg_root)
+    sys.path.insert(0, project_root)
+    __package__ = 'app'
 from flask import Flask, request, render_template, session, jsonify
 from flask_session import Session
 import os
 import stripe
 
-from config import SECRET_KEY, PIZZERIA, INFO, STRIPE_WEBHOOK_SECRET
-from rule_kb import responses_template
-from state_handler import get_state, set_state
-from menu_helpers import format_menu, best_match
-from ai_intent import understand
-from ai_rag import rag_response
-from cart_logic import cart_summary, confirm_order, do_checkout
+from .config import SECRET_KEY, PIZZERIA, INFO, STRIPE_WEBHOOK_SECRET
+from .rule_kb import responses_template
+from .openai_funcs import handle_function_call
+from .state_handler import get_state, set_state
+from .menu_helpers import format_menu, best_match
+from .ai_intent import understand
+from .ai_rag import rag_response
+from .cart_logic import cart_summary, confirm_order, do_checkout
+from .utils import log_chat
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
@@ -19,6 +33,72 @@ Session(app)
 # Chat handler
 def respond(text):
     state = get_state()
+    # If in the middle of detailed order flow, handle steps sequentially
+    step = state.get('step')
+    if step == 'await_name':
+        name = text.strip()
+        state.setdefault('pending_order', {})['name'] = name
+        state['step'] = 'await_delivery_method'
+        set_state(state)
+        return f"Piacere di conoscerti, {name}! Preferisci consegna a domicilio o ritiro al locale?"
+    if step == 'await_delivery_method':
+        choice = text.lower()
+        if 'domicilio' in choice or 'consegna' in choice:
+            state['pending_order']['delivery'] = 'domicilio'
+            state['step'] = 'await_address'
+            set_state(state)
+            return "Perfetto, per favore indicami l'indirizzo di consegna."
+        state['pending_order']['delivery'] = 'ritiro'
+        state['step'] = 'await_payment_method'
+        set_state(state)
+        return "Va benissimo, come preferisci pagare? Online o direttamente in pizzeria?"
+    if step == 'await_address':
+        address = text.strip()
+        state['pending_order']['address'] = address
+        state['step'] = 'await_payment_method'
+        set_state(state)
+        return "Grazie! Ora dimmi come preferisci pagare: online o in pizzeria?"
+    if step == 'await_payment_method':
+        pm = text.lower()
+        if 'online' in pm or 'carta' in pm:
+            state['pending_order']['payment'] = 'online'
+        else:
+            state['pending_order']['payment'] = 'in pizzeria'
+        state['step'] = 'await_order_confirmation'
+        set_state(state)
+        # Build order summary
+        summary, total = cart_summary(state['cart'])
+        items_text = '\n'.join([f"• {n} x{q}" for n,q in summary.items()])
+        delivery = state['pending_order'].get('delivery')
+        address = state['pending_order'].get('address', '-')
+        payment = state['pending_order'].get('payment')
+        # Build a rich markdown summary with ChatGPT-style formatting
+        customer = state['pending_order'].get('name', '')
+        pay_label = 'Online' if payment=='online' else 'In pizzeria'
+        mode_label = '📦 Consegna a domicilio' if delivery=='domicilio' else '🏁 Ritiro al locale'
+        confirm_msg = f"""Ciao **{customer}**, ecco il riepilogo del tuo ordine:
+## 📋 Riepilogo Ordine
+{items_text}
+
+💰 **Totale:** €{total:.2f}
+🚚 **Modalità:** {mode_label}
+📍 **Indirizzo:** {address if delivery=='domicilio' else '—'}
+💳 **Pagamento:** {pay_label}
+
+__Confermi l'ordine?___ (sì / no)"""
+        return confirm_msg
+    if step == 'await_order_confirmation':
+        ans = text.strip().lower()
+        if ans in ['sì','si','yes','confermo','ok']:
+            state['step'] = 'ordered'
+            set_state(state)
+            # finalize checkout
+            final = do_checkout(state)
+            return f"✅ Ordine confermato!\n{final}"
+        state['step'] = 'ordering'
+        state.pop('pending_order', None)
+        set_state(state)
+        return "Ordine annullato. Posso aiutarti in altro modo?"
 
     if text == "!welcome" or state.get("step") == "start":
         state["step"] = "ordering"
@@ -27,23 +107,9 @@ def respond(text):
 
     parsed_intents = understand(text, state)
 
-    # Fallback: if no intent parsed, try to infer based on vague responses
-    # If we couldn't parse any intent, try simple commands then fallback to RAG
+    # Fallback: if no intent parsed, delegate to function-calling handler
     if not parsed_intents:
-        text_lower = text.strip().lower()
-        affirmatives = {
-            "yes", "sure", "go", "vai", "ok", "okay",
-            "checkout", "ordine", "order", "procedi", "confirm",
-            "checkout now", "do it", "sì", "si", "va bene", "d'accordo"
-        }
-        if text_lower in affirmatives:
-            if state.get("cart") and state.get("step") != "ordered":
-                return do_checkout(state)
-            return "Vuoi vedere il menu o iniziare un ordine?"
-        if text_lower in {"menu", "show menu", "mostra menu"}:
-            return format_menu()
-        # Fallback to retrieval-augmented generation
-        return rag_response(text, state)
+        return handle_function_call(text, state)
 
     from collections import defaultdict
     intent_bucket = defaultdict(list)
@@ -128,14 +194,17 @@ def respond(text):
         elif intent == "staff":
             responses.append(responses_template.get('other', 'Ti metto in contatto con lo staff... scherzo! Sono ancora io. Dimmi pure.'))
         elif intent == "checkout":
-            responses.append(do_checkout(state))
+            # Begin detailed order flow: collect customer info
+            state['step'] = 'await_name'
             set_state(state)
+            # Acknowledge and ask for customer name
+            responses.append("Perfetto, proseguiamo con l'ordine! Prima di tutto, come ti chiami?")
         elif intent == "other":
-            # Fallback for miscellaneous queries
-            responses.append(responses_template.get('fallback', rag_response(text, state)))
-    # If still no response, use RAG fallback
+            # Fallback for miscellaneous queries via function calling
+            responses.append(handle_function_call(text, state))
+    # If still no response, use function-calling fallback
     if not responses:
-        responses.append(rag_response(text, state))
+        responses.append(handle_function_call(text, state))
 
     return "\n\n".join(responses)
 
@@ -158,6 +227,11 @@ def chat():
     state = get_state()
     state.setdefault("history", []).append({"role": "assistant", "content": reply})
     set_state(state)
+    # Persist chat to file for analytics
+    try:
+        log_chat(user_input, reply)
+    except Exception:
+        pass
     return jsonify({"response": reply, "cart": state.get("cart", [])})
 
 
@@ -181,4 +255,7 @@ def health():
     return "OK", 200
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    # Allow the port to be configured via the PORT env var (default 5000)
+    port = int(os.environ.get("PORT", 5000))
+    # Bind to all interfaces by default
+    app.run(debug=True, host="0.0.0.0", port=port)

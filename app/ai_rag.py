@@ -1,7 +1,7 @@
 import openai
 
-from config import PIZZERIA
-from kb import kb
+from .config import PIZZERIA
+from .kb import kb
 
 def rag_response(text, state):
     """

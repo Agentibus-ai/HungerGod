@@ -1,7 +1,7 @@
 import os
 import json
 
-from config import BASE_DIR, menu
+from .config import BASE_DIR, menu
 
 # Path to the Italian KB file
 KB_PATH = os.path.join(BASE_DIR, 'italian_kb.json')

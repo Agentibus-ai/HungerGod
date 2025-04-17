@@ -11,7 +11,8 @@ def get_state():
             "step": "start",
             "cart": [],
             "history": [],
-            "name": "",
+            # For conversational flows
+            "pending_order": {},
             "last_order": {},
             "last_active": datetime.now(),
         },

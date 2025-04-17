@@ -2,7 +2,7 @@ import os
 import openai
 import math
 
-from config import BASE_DIR
+from .config import BASE_DIR
 
 # Directory containing knowledge base documents (plain text files)
 KB_DIR = os.path.join(BASE_DIR, 'kb_docs')

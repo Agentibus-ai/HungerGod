@@ -1,9 +1,9 @@
 import json
 import re
 import openai
-from cart_logic import cart_summary
-from config import PIZZERIA
-from rule_kb import classify as rule_classify
+from .cart_logic import cart_summary
+from .config import PIZZERIA
+from .rule_kb import classify as rule_classify
 
 def understand(text, state):
     """

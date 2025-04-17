@@ -18,6 +18,11 @@ window.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     sendMessage('!welcome');
   }, 3000);
+  // Disable send button until input has content
+  sendButton.disabled = true;
+  messageInput.addEventListener('input', () => {
+    sendButton.disabled = !messageInput.value.trim();
+  });
 });
 
 sendButton.addEventListener('click', () => {
@@ -50,7 +55,7 @@ function sendMessage(overrideMessage) {
   typing.className = 'typing-indicator';
   typing.textContent = 'Mario sta scrivendo...';
   chatBox.appendChild(typing);
-  chatBox.scrollTop = chatBox.scrollHeight;
+  typing.scrollIntoView({ behavior: 'smooth', block: 'end' });
 
   fetch('/chat', {
     method: 'POST',
@@ -94,7 +99,10 @@ function addMessage(content, sender) {
   msgEl.appendChild(timeEl);
 
   chatBox.appendChild(msgEl);
-  chatBox.scrollTop = chatBox.scrollHeight;
+  // Smooth scroll to the new message
+  msgEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  // Refocus input
+  messageInput.focus();
 }
 
 function updateCartUI() {

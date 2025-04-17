@@ -27,3 +27,21 @@ def save_order(user_id, main_item, item_count):
     except Exception as e:
         print(f"Error saving order: {e}")
         return False
+   
+def log_chat(user_message, bot_reply):
+    """
+    Append a chat entry (user and bot messages with timestamp) to logs/chat.log.
+    """
+    try:
+        # Ensure logs directory exists
+        if not os.path.exists("logs"):
+            os.makedirs("logs")
+        entry = {
+            "timestamp": datetime.datetime.now().isoformat(),
+            "user": user_message,
+            "bot": bot_reply,
+        }
+        with open("logs/chat.log", "a") as f:
+            f.write(json.dumps(entry) + "\n")
+    except Exception as e:
+        print(f"Error logging chat: {e}")

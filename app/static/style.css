@@ -93,6 +93,16 @@
     background-color: var(--primary);
     color: white;
     border-bottom-right-radius: 5px;
+    position: relative;
+  }
+  /* User bubble tail */
+  .user-message::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: -8px;
+    border: 8px solid transparent;
+    border-left-color: var(--primary);
   }
   
   .bot-message {
@@ -100,6 +110,16 @@
     background-color: var(--light);
     color: var(--text);
     border-bottom-left-radius: 5px;
+    position: relative;
+  }
+  /* Bot bubble tail */
+  .bot-message::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -8px;
+    border: 8px solid transparent;
+    border-right-color: var(--light);
   }
   
   .message-time {
@@ -172,6 +192,13 @@
   
   .send-button:active {
     transform: scale(0.95);
+  }
+  /* Disabled send button state */
+  .send-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    background-color: var(--primary);
   }
   
   /* Cart & Quick Order Buttons */

@@ -1,5 +1,5 @@
 import difflib
-from config import menu, PIZZERIA
+from .config import menu, PIZZERIA
 
 def format_menu():
     """Format the menu with improved styling and readability"""

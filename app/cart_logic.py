@@ -1,8 +1,8 @@
 import random
 from datetime import datetime, timedelta
 
-from config import menu, PIZZERIA, INFO
-from utils import save_order
+from .config import menu, PIZZERIA, INFO
+from .utils import save_order
 
 def cart_summary(cart):
     """Return a summary dict of item counts and the total price."""
