@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, session, jsonify
 from flask_session import Session
-from openai import OpenAI
+import openai
 from dotenv import load_dotenv
 from utils import save_order
 import os, json, difflib, random, stripe, re
@@ -13,7 +13,8 @@ app.secret_key = os.getenv("SECRET_KEY", "SUPER_SECURE_KEY")
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
 with open("pizza_menu.json") as f:
@@ -97,7 +98,7 @@ Messaggio utente:\n{text}
     """
 
     try:
-        response = client.chat.completions.create(
+        response = openai.chat.completions.create(
             model="gpt-4-1106-preview",
             messages=[{"role": "system", "content": system_prompt}],
             temperature=0.2
