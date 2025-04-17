@@ -104,6 +104,7 @@ Messaggio utente:\n{text}
             temperature=0.2
         )
         content = response.choices[0].message.content.strip()
+        print("LLM raw response:", content)  # helpful for debugging
         match = re.search(r"(\[.*\])", content, re.DOTALL)
         return json.loads(match.group(1)) if match else []
     except Exception as e:
@@ -230,14 +231,23 @@ def do_checkout(state):
 # Chat handler
 def respond(text):
     state = get_state()
+
     if text == "!welcome" or state["step"] == "start":
         state["step"] = "ordering"
         set_state(state)
         return f"👋 Benvenuto in *{PIZZERIA}*! Vuoi vedere il menu o ordinare subito? La Diavola oggi è 🔥"
 
     parsed_intents = understand(text, state)
+
+    # Fallback: if no intent parsed, try to infer based on vague responses
     if not parsed_intents:
-        return "Non ho capito bene. Vuoi vedere il menu o ordinare qualcosa?"
+        text_lower = text.strip().lower()
+        if text_lower in ["yes", "sure", "go", "vai", "okay", "ok", "checkout", "ordine", "order", "procedi"]:
+            return do_checkout(state)
+        elif text_lower in ["menu", "show menu"]:
+            return format_menu()
+        else:
+            return "Non ho capito bene. Vuoi vedere il menu o ordinare qualcosa?"
 
     from collections import defaultdict
     intent_bucket = defaultdict(list)
@@ -315,6 +325,7 @@ def respond(text):
             responses.append("Non ho capito bene. Vuoi vedere il menu, ordinare o controllare un ordine?")
 
     return "\n\n".join(responses)
+
 
 
 @app.route("/")
